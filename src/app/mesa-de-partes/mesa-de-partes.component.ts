@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-
 import { environment } from '../../environments/environment';
 
 @Component({
@@ -17,7 +16,11 @@ export class MesaDePartesComponent implements OnInit {
   selectedFile: File | null = null;
   private apiUrl = `${environment.apiUrl}/mesa-partes`;
 
-  constructor(private fb: FormBuilder, private http: HttpClient) {
+  constructor(
+    private fb: FormBuilder,
+    private http: HttpClient,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
     this.tramiteForm = this.fb.group({
       asunto: ['', Validators.required],
       descripcion: ['', Validators.required]
@@ -25,7 +28,9 @@ export class MesaDePartesComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loadTramites();
+    if (isPlatformBrowser(this.platformId)) {
+      this.loadTramites();
+    }
   }
 
   loadTramites() {

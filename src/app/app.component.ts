@@ -12,6 +12,6 @@ import { NavbarComponent } from './components/navbar/navbar.component';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'muni-front';
+  title = 'Municipalidad de Santiago';
   constructor(private router: Router) { }
 }

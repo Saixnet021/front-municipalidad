@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-sans text-slate-800 bg-slate-50 antialiased;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-bold text-primary;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-light transition-colors duration-200 font-medium shadow-sm hover:shadow-md active:transform active:scale-95;
+  }
+  .btn-secondary {
+    @apply px-4 py-2 bg-secondary text-white rounded-lg hover:bg-secondary-light transition-colors duration-200 font-medium shadow-sm hover:shadow-md active:transform active:scale-95;
+  }
+  .btn-outline {
+    @apply px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors duration-200 font-medium;
+  }
+  .card {
+    @apply bg-white rounded-xl shadow-card p-6 border border-surface-border;
+  }
+  .input-field {
+    @apply w-full px-4 py-2 rounded-lg border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all duration-200;
+  }
+  .table-header {
+    @apply px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider bg-slate-50 border-b border-slate-200;
+  }
+  .table-cell {
+    @apply px-6 py-4 whitespace-nowrap text-sm text-slate-700 border-b border-slate-100;
+  }
+}
+
+/* You can add global styles to this file, and also import other style files */

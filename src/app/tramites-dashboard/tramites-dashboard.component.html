@@ -1,0 +1,62 @@
+<div class="container mx-auto px-4 py-8 max-w-6xl">
+    <div class="mb-8 text-center">
+        <h1 class="text-3xl font-bold text-slate-800 mb-2">Trámites en Línea</h1>
+        <p class="text-slate-600">Realiza tus gestiones municipales de forma rápida y segura</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <a *ngFor="let tramite of tramites" [routerLink]="tramite.route"
+            class="group bg-white rounded-xl shadow-sm border border-slate-200 p-6 hover:shadow-lg hover:border-{{tramite.color}}-300 transition-all duration-300 cursor-pointer">
+
+            <div class="flex items-start gap-4">
+                <div
+                    class="flex-shrink-0 w-12 h-12 rounded-lg bg-{{tramite.color}}-100 flex items-center justify-center group-hover:bg-{{tramite.color}}-200 transition-colors">
+                    <svg class="w-6 h-6 text-{{tramite.color}}-600" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="tramite.icon" />
+                    </svg>
+                </div>
+
+                <div class="flex-grow">
+                    <h3
+                        class="text-lg font-bold text-slate-900 mb-1 group-hover:text-{{tramite.color}}-600 transition-colors">
+                        {{ tramite.title }}
+                    </h3>
+                    <p class="text-sm text-slate-600">{{ tramite.description }}</p>
+                </div>
+
+                <svg class="w-5 h-5 text-slate-400 group-hover:text-{{tramite.color}}-600 group-hover:translate-x-1 transition-all"
+                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </div>
+
+            <div class="mt-4 pt-4 border-t border-slate-100">
+                <span class="text-xs text-{{tramite.color}}-600 font-medium flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                    Iniciar trámite
+                </span>
+            </div>
+        </a>
+    </div>
+
+    <div class="mt-12 bg-blue-50 border border-blue-200 rounded-lg p-6">
+        <div class="flex items-start gap-3">
+            <svg class="w-6 h-6 text-blue-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div>
+                <h4 class="font-bold text-blue-900 mb-1">Información Importante</h4>
+                <p class="text-sm text-blue-800">
+                    Todos los trámites son procesados en un plazo máximo de 15 días hábiles.
+                    Asegúrate de tener todos los documentos requeridos antes de iniciar tu solicitud.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

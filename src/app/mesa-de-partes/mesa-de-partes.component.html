@@ -1,0 +1,99 @@
+<div class="container mx-auto px-4 py-8 animate-fade-in">
+  <div class="flex items-center justify-between mb-8">
+    <div>
+      <h1 class="text-3xl font-display font-bold text-primary">Mesa de Partes Virtual</h1>
+      <p class="text-slate-500 mt-1">Gestiona tus solicitudes y trámites documentarios.</p>
+    </div>
+  </div>
+  
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- New Request Form -->
+    <div class="lg:col-span-1">
+      <div class="card sticky top-24">
+        <h2 class="text-xl font-bold text-primary mb-6 flex items-center gap-2">
+          <svg class="w-5 h-5 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+          Nuevo Trámite
+        </h2>
+        <form [formGroup]="tramiteForm" (ngSubmit)="onSubmit()" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Asunto</label>
+            <input type="text" formControlName="asunto" class="input-field" placeholder="Ej: Solicitud de Licencia">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Descripción</label>
+            <textarea formControlName="descripcion" rows="4" class="input-field resize-none" placeholder="Detalle su solicitud..."></textarea>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Archivo Adjunto</label>
+            <div class="relative">
+              <input type="file" (change)="onFileSelect($event)" class="hidden" id="file-upload">
+              <label for="file-upload" class="w-full flex items-center justify-center px-4 py-2 border border-dashed border-slate-300 rounded-lg cursor-pointer hover:bg-slate-50 transition-colors">
+                <span class="text-sm text-slate-600" *ngIf="!selectedFile">Seleccionar archivo</span>
+                <span class="text-sm text-primary font-medium truncate" *ngIf="selectedFile">{{selectedFile.name}}</span>
+              </label>
+            </div>
+          </div>
+          <button type="submit" [disabled]="tramiteForm.invalid" class="btn-primary w-full flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+            <span>Enviar Trámite</span>
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Requests List -->
+    <div class="lg:col-span-2">
+      <div class="card">
+        <h2 class="text-xl font-bold text-primary mb-6 flex items-center gap-2">
+          <svg class="w-5 h-5 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+          </svg>
+          Mis Trámites
+        </h2>
+        <div class="overflow-x-auto rounded-lg border border-slate-200">
+          <table class="min-w-full divide-y divide-slate-200">
+            <thead class="bg-slate-50">
+              <tr>
+                <th class="table-header">ID</th>
+                <th class="table-header">Asunto</th>
+                <th class="table-header">Estado</th>
+                <th class="table-header text-right">Acciones</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-slate-200">
+              <tr *ngFor="let tramite of tramites" class="hover:bg-slate-50 transition-colors">
+                <td class="table-cell font-medium text-slate-900">#{{tramite.id}}</td>
+                <td class="table-cell">{{tramite.asunto}}</td>
+                <td class="table-cell">
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-medium border"
+                    [ngClass]="{
+                      'bg-green-100 text-green-800 border-green-200': tramite.estado === 'FINALIZADO',
+                      'bg-amber-100 text-amber-800 border-amber-200': tramite.estado === 'EN_PROCESO',
+                      'bg-blue-100 text-blue-800 border-blue-200': tramite.estado === 'ENVIADO'
+                    }">
+                    {{tramite.estado}}
+                  </span>
+                </td>
+                <td class="table-cell text-right">
+                  <button class="text-primary hover:text-primary-light font-medium text-sm">Ver Detalle</button>
+                </td>
+              </tr>
+              <tr *ngIf="tramites.length === 0">
+                <td colspan="4" class="px-6 py-12 text-center text-slate-500">
+                  <svg class="mx-auto h-12 w-12 text-slate-300 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  <p>No tienes trámites registrados</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

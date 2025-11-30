@@ -1,0 +1,68 @@
+<div class="container mx-auto px-4 py-8 animate-fade-in">
+  <div class="flex items-center justify-between mb-8">
+    <div>
+      <h1 class="text-3xl font-display font-bold text-primary">Licencias de Funcionamiento</h1>
+      <p class="text-slate-500 mt-1">Tramita la licencia para tu negocio o establecimiento.</p>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Request Form -->
+    <div class="lg:col-span-1">
+      <div class="card sticky top-24">
+        <h2 class="text-xl font-bold text-primary mb-6 flex items-center gap-2">
+          <svg class="w-5 h-5 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+          </svg>
+          Nueva Solicitud
+        </h2>
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Nombre del Negocio</label>
+            <input type="text" formControlName="negocio" class="input-field" placeholder="Ej: Bodega Don Pepe">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">RUC</label>
+            <input type="text" formControlName="ruc" class="input-field" placeholder="20123456789">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Dirección del Local</label>
+            <input type="text" formControlName="direccion" class="input-field" placeholder="Av. Comercio 456">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Representante Legal</label>
+            <input type="text" formControlName="representante" class="input-field" placeholder="Juan Pérez">
+          </div>
+          <button type="submit" [disabled]="form.invalid"
+            class="btn-primary w-full flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+            <span>Solicitar Licencia</span>
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Info Section -->
+    <div class="lg:col-span-2">
+      <div class="card">
+        <h2 class="text-xl font-bold text-primary mb-6 flex items-center gap-2">
+          <svg class="w-5 h-5 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Información
+        </h2>
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
+          <p class="text-sm text-blue-800">
+            Una vez enviada tu solicitud, será procesada en un plazo máximo de 15 días hábiles.
+            Recibirás una notificación cuando tu licencia esté lista.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

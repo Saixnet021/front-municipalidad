@@ -56,7 +56,7 @@ export class RegisterComponent {
           console.error('Registration error:', err);
           Swal.fire({
             title: 'Error en el registro',
-            text: err.error?.message || 'Ocurrió un error inesperado. Por favor, inténtalo de nuevo.',
+            text: err.error?.error || err.error?.message || 'Ocurrió un error inesperado. Por favor, inténtalo de nuevo.',
             icon: 'error',
             confirmButtonColor: '#c8102e',
             confirmButtonText: 'Cerrar'

@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 
+import { environment } from '../../environments/environment';
+
 @Component({
   selector: 'app-mesa-de-partes',
   standalone: true,
@@ -13,7 +15,7 @@ export class MesaDePartesComponent implements OnInit {
   tramiteForm: FormGroup;
   tramites: any[] = [];
   selectedFile: File | null = null;
-  private apiUrl = 'http://localhost:8080/api/v1/mesa-partes';
+  private apiUrl = `${environment.apiUrl}/mesa-partes`;
 
   constructor(private fb: FormBuilder, private http: HttpClient) {
     this.tramiteForm = this.fb.group({

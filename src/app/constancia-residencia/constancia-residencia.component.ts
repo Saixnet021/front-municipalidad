@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 
+import { environment } from '../../environments/environment';
+
 @Component({
   selector: 'app-constancia-residencia',
   standalone: true,
@@ -13,7 +15,7 @@ export class ConstanciaResidenciaComponent implements OnInit {
   form: FormGroup;
   selectedFile: File | null = null;
   loading: boolean = false;
-  private apiUrl = 'http://localhost:8080/api/v1/tramites';
+  private apiUrl = `${environment.apiUrl}/tramites`;
 
   constructor(private fb: FormBuilder, private http: HttpClient) {
     this.form = this.fb.group({

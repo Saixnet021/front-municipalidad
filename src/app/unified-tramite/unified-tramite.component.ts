@@ -104,11 +104,12 @@ export class UnifiedTramiteComponent {
     }
 
     if (tipo === 'licencia') {
+      const areaVal = this.tramiteForm.get('area')?.value;
       const body = {
         usuario: this.tramiteForm.get('usuario')?.value,
         nombreNegocio: this.tramiteForm.get('nombreNegocio')?.value,
         giro: this.tramiteForm.get('giro')?.value,
-        area: this.tramiteForm.get('area')?.value,
+        area: areaVal ? areaVal : 0,
         zonificacion: this.tramiteForm.get('zonificacion')?.value
       };
       this.http.post<any>(`${environment.apiUrl}/tramites/${endpoint}`, body).subscribe({
@@ -116,6 +117,14 @@ export class UnifiedTramiteComponent {
         error: (err) => this.handleError(err)
       });
     } else {
+      // Handle numeric fields for FormData
+      const tiempoResidencia = this.tramiteForm.get('tiempoResidencia')?.value;
+      if (tiempoResidencia) {
+        formData.append('tiempoResidencia', tiempoResidencia);
+      } else if (tipo === 'constancia') {
+        formData.append('tiempoResidencia', '0');
+      }
+
       this.http.post<any>(`${environment.apiUrl}/tramites/${endpoint}`, formData).subscribe({
         next: (res) => this.handleSuccess(res),
         error: (err) => this.handleError(err)

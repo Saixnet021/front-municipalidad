@@ -19,4 +19,8 @@ export class PagoService {
     procesarPago(pagoRequest: any): Observable<any> {
         return this.http.post(`${this.apiUrl}/pagos/procesar`, pagoRequest);
     }
+
+    realizarPagoSimulado(id: number, cardData: any): Observable<any> {
+        return this.http.post(`${this.apiUrl}/${id}/pagar-simulado`, cardData);
+    }
 }

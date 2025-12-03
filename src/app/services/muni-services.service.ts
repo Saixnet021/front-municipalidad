@@ -7,23 +7,31 @@ import { Observable } from 'rxjs';
 })
 export class MuniServicesService {
 
-  private baseUrl = '/api/municipalidad';
+  private apiUrl = 'http://localhost:8080/api/v1/tramites';
 
   constructor(private http: HttpClient) { }
 
-  crearMesaDePartes(data: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/mesa-de-partes`, data);
+  crearMesaDePartes(data: FormData): Observable<any> {
+    return this.http.post(`${this.apiUrl}/mesa-de-partes`, data);
   }
 
-  solicitarConstanciaResidencia(data: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/constancia-residencia`, data);
+  solicitarConstanciaResidencia(data: FormData): Observable<any> {
+    return this.http.post(`${this.apiUrl}/constancia`, data);
   }
 
   emitirLicenciaFuncionamiento(data: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/licencia-funcionamiento`, data);
+    return this.http.post(`${this.apiUrl}/licencia`, data);
   }
 
   pagarArbitrios(data: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/pago-arbitrios`, data);
+    return this.http.post(`${this.apiUrl}/pago-arbitrios`, data);
+  }
+
+  buscarTramitePorExpediente(expediente: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/expediente/${expediente}`);
+  }
+
+  buscarTramitesPorUsuario(usuario: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/usuario/${usuario}`);
   }
 }

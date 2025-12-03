@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-
-import { environment } from '../../environments/environment';
+import { MuniServicesService } from '../services/muni-services.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-constancia-residencia',
@@ -15,9 +14,14 @@ export class ConstanciaResidenciaComponent implements OnInit {
   form: FormGroup;
   selectedFile: File | null = null;
   loading: boolean = false;
-  private apiUrl = `${environment.apiUrl}/tramites`;
+  mostrarModal: boolean = false;
+  expedienteGenerado: string = '';
 
-  constructor(private fb: FormBuilder, private http: HttpClient) {
+  constructor(
+    private fb: FormBuilder,
+    private muniService: MuniServicesService,
+    private router: Router
+  ) {
     this.form = this.fb.group({
       usuario: ['', Validators.required],
       direccion: ['', Validators.required],
@@ -47,12 +51,13 @@ export class ConstanciaResidenciaComponent implements OnInit {
         formData.append('recibo', this.selectedFile);
       }
 
-      this.http.post(`${this.apiUrl}/constancia`, formData).subscribe({
+      this.muniService.solicitarConstanciaResidencia(formData).subscribe({
         next: (response: any) => {
           this.loading = false;
+          this.expedienteGenerado = response.tramite.expediente;
+          this.mostrarModal = true;
           this.form.reset();
           this.selectedFile = null;
-          alert('Trámite de Constancia de Residencia creado exitosamente. ID: ' + response.tramite.id);
         },
         error: (err) => {
           this.loading = false;
@@ -60,5 +65,10 @@ export class ConstanciaResidenciaComponent implements OnInit {
         }
       });
     }
+  }
+
+  cerrarModal() {
+    this.mostrarModal = false;
+    this.router.navigate(['/estado-tramites']);
   }
 }

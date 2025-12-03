@@ -4,42 +4,30 @@
         <p class="text-slate-600">Realiza tus gestiones municipales de forma rápida y segura</p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <a *ngFor="let tramite of tramites" [routerLink]="tramite.route"
-            class="group bg-white rounded-xl shadow-sm border border-slate-200 p-6 hover:shadow-lg hover:border-{{tramite.color}}-300 transition-all duration-300 cursor-pointer">
-
-            <div class="flex items-start gap-4">
-                <div
-                    class="flex-shrink-0 w-12 h-12 rounded-lg bg-{{tramite.color}}-100 flex items-center justify-center group-hover:bg-{{tramite.color}}-200 transition-colors">
-                    <svg class="w-6 h-6 text-{{tramite.color}}-600" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="tramite.icon" />
-                    </svg>
-                </div>
-
-                <div class="flex-grow">
-                    <h3
-                        class="text-lg font-bold text-slate-900 mb-1 group-hover:text-{{tramite.color}}-600 transition-colors">
-                        {{ tramite.title }}
-                    </h3>
-                    <p class="text-sm text-slate-600">{{ tramite.description }}</p>
-                </div>
-
-                <svg class="w-5 h-5 text-slate-400 group-hover:text-{{tramite.color}}-600 group-hover:translate-x-1 transition-all"
-                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Unified Entry Point -->
+        <a routerLink="/tramites/nuevo"
+            class="group bg-white rounded-xl shadow-sm border border-slate-200 p-6 hover:shadow-lg hover:border-blue-300 transition-all duration-300 cursor-pointer col-span-1 md:col-span-3 flex items-center gap-6">
+            
+            <div class="flex-shrink-0 w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center group-hover:bg-blue-200 transition-colors">
+                <svg class="w-8 h-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg>
             </div>
 
-            <div class="mt-4 pt-4 border-t border-slate-100">
-                <span class="text-xs text-{{tramite.color}}-600 font-medium flex items-center gap-1">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                    </svg>
-                    Iniciar trámite
-                </span>
+            <div class="flex-grow">
+                <h3 class="text-xl font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">
+                    Iniciar Nuevo Trámite
+                </h3>
+                <p class="text-slate-600">
+                    Mesa de Partes, Constancia de Residencia, Licencia de Funcionamiento y más.
+                </p>
             </div>
+
+            <svg class="w-6 h-6 text-slate-400 group-hover:text-blue-600 group-hover:translate-x-1 transition-all"
+                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
         </a>
     </div>
 

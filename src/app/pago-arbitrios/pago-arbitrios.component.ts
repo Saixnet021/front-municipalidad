@@ -4,8 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { PagoService } from '../services/pago.service';
 import { environment } from '../../environments/environment';
 
-declare var Culqi: any;
-
 @Component({
   selector: 'app-pago-arbitrios',
   standalone: true,
@@ -19,6 +17,14 @@ export class PagoArbitriosComponent implements OnInit {
   loading: boolean = false;
   error: string = '';
   selectedItem: any = null;
+  showPaymentForm = false;
+
+  cardData = {
+    cardNumber: '',
+    expiryDate: '',
+    cvv: '',
+    ownerName: ''
+  };
 
   constructor(
     private pagoService: PagoService,
@@ -54,36 +60,29 @@ export class PagoArbitriosComponent implements OnInit {
     });
   }
 
-  pay(item: any) {
-    // Simulación de pago directo por ahora, ya que se removió Culqi
-    if (confirm('¿Desea procesar el pago de ' + item.monto + ' soles?')) {
-      this.procesarPagoBackend('token_simulado', 'usuario@example.com');
-    }
+  iniciarPago(item: any) {
+    this.selectedItem = item;
+    this.showPaymentForm = true;
   }
 
-  procesarPagoBackend(token: string, email: string) {
-    if (!this.selectedItem) this.selectedItem = this.items.find(i => i.id === this.items[0].id); // Fallback simple
+  cancelarPago() {
+    this.showPaymentForm = false;
+    this.selectedItem = null;
+    this.cardData = { cardNumber: '', expiryDate: '', cvv: '', ownerName: '' };
+  }
 
-    const pagoRequest = {
-      token: token,
-      deudaId: this.selectedItem?.id,
-      email: email,
-      monto: this.selectedItem?.monto
-    };
+  procesarPagoSimulado() {
+    if (!this.selectedItem) return;
 
-    this.loading = true;
-
-    this.pagoService.procesarPago(pagoRequest).subscribe({
-      next: (resp) => {
-        alert('¡Pago realizado con éxito! ID Transacción: ' + resp.pago.idPago);
-        this.loading = false;
-        this.selectedItem = null;
-        this.consultarDeuda(); // Recargar lista
+    this.pagoService.realizarPagoSimulado(this.selectedItem.id, this.cardData).subscribe({
+      next: () => {
+        alert('Pago realizado con éxito');
+        this.cancelarPago();
+        this.consultarDeuda(); // Refresh debts
       },
       error: (err) => {
-        console.error(err);
-        this.loading = false;
-        alert('Error al procesar el pago en el servidor: ' + (err.error?.error || 'Error desconocido'));
+        console.error('Error al procesar el pago', err);
+        alert('Error al procesar el pago');
       }
     });
   }
@@ -92,6 +91,4 @@ export class PagoArbitriosComponent implements OnInit {
     this.dni = '12345678';
     this.consultarDeuda();
   }
-
-
 }

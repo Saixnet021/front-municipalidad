@@ -8,7 +8,7 @@
   
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
     <!-- New Request Form -->
-    <div class="lg:col-span-1">
+    <div class="lg:col-span-2">
       <div class="card sticky top-24">
         <h2 class="text-xl font-bold text-primary mb-6 flex items-center gap-2">
           <svg class="w-5 h-5 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -17,6 +17,10 @@
           Nuevo Trámite
         </h2>
         <form [formGroup]="tramiteForm" (ngSubmit)="onSubmit()" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Solicitante (Usuario)</label>
+            <input type="text" formControlName="usuario" class="input-field" placeholder="Nombre completo del solicitante">
+          </div>
           <div>
             <label class="block text-sm font-medium text-slate-700 mb-1">Asunto</label>
             <input type="text" formControlName="asunto" class="input-field" placeholder="Ej: Solicitud de Licencia">
@@ -35,9 +39,10 @@
               </label>
             </div>
           </div>
-          <button type="submit" [disabled]="tramiteForm.invalid" class="btn-primary w-full flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
-            <span>Enviar Trámite</span>
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <button type="submit" [disabled]="tramiteForm.invalid || enviando" class="btn-primary w-full flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+            <span *ngIf="!enviando">Enviar Trámite</span>
+            <span *ngIf="enviando">Enviando...</span>
+            <svg *ngIf="!enviando" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
           </button>
@@ -45,55 +50,45 @@
       </div>
     </div>
 
-    <!-- Requests List -->
-    <div class="lg:col-span-2">
-      <div class="card">
-        <h2 class="text-xl font-bold text-primary mb-6 flex items-center gap-2">
-          <svg class="w-5 h-5 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-          </svg>
-          Mis Trámites
-        </h2>
-        <div class="overflow-x-auto rounded-lg border border-slate-200">
-          <table class="min-w-full divide-y divide-slate-200">
-            <thead class="bg-slate-50">
-              <tr>
-                <th class="table-header">ID</th>
-                <th class="table-header">Asunto</th>
-                <th class="table-header">Estado</th>
-                <th class="table-header text-right">Acciones</th>
-              </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-slate-200">
-              <tr *ngFor="let tramite of tramites" class="hover:bg-slate-50 transition-colors">
-                <td class="table-cell font-medium text-slate-900">#{{tramite.id}}</td>
-                <td class="table-cell">{{tramite.asunto}}</td>
-                <td class="table-cell">
-                  <span class="px-2.5 py-0.5 rounded-full text-xs font-medium border"
-                    [ngClass]="{
-                      'bg-green-100 text-green-800 border-green-200': tramite.estado === 'FINALIZADO',
-                      'bg-amber-100 text-amber-800 border-amber-200': tramite.estado === 'EN_PROCESO',
-                      'bg-blue-100 text-blue-800 border-blue-200': tramite.estado === 'ENVIADO'
-                    }">
-                    {{tramite.estado}}
-                  </span>
-                </td>
-                <td class="table-cell text-right">
-                  <button class="text-primary hover:text-primary-light font-medium text-sm">Ver Detalle</button>
-                </td>
-              </tr>
-              <tr *ngIf="tramites.length === 0">
-                <td colspan="4" class="px-6 py-12 text-center text-slate-500">
-                  <svg class="mx-auto h-12 w-12 text-slate-300 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                  <p>No tienes trámites registrados</p>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+    <!-- Info Panel -->
+    <div class="lg:col-span-1">
+      <div class="bg-blue-50 border border-blue-100 rounded-lg p-6">
+        <h3 class="text-lg font-bold text-blue-800 mb-3">Información Importante</h3>
+        <p class="text-blue-700 text-sm mb-4">
+          Al registrar su trámite, se generará automáticamente un <strong>Número de Expediente</strong>.
+        </p>
+        <p class="text-blue-700 text-sm">
+          Guarde este número para consultar el estado de su solicitud en la sección "Estado de Trámites".
+        </p>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- Success Modal -->
+<div *ngIf="mostrarModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+  <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6 animate-fade-in">
+    <div class="text-center mb-6">
+      <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+        <svg class="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
+      <h3 class="text-xl font-bold text-slate-800 mb-2">¡Trámite Registrado!</h3>
+      <p class="text-slate-600">Su solicitud ha sido enviada correctamente.</p>
+    </div>
+
+    <div class="bg-slate-50 rounded-lg p-4 mb-6 text-center border border-slate-200">
+      <p class="text-xs text-slate-500 uppercase tracking-wide font-semibold mb-1">Número de Expediente</p>
+      <p class="text-2xl font-bold text-primary">{{ expedienteGenerado }}</p>
+    </div>
+
+    <p class="text-sm text-slate-500 text-center mb-6">
+      Utilice este número para hacer seguimiento a su trámite en la sección de consulta.
+    </p>
+
+    <button (click)="cerrarModal()" class="btn-primary w-full">
+      Entendido, ir a Consultas
+    </button>
   </div>
 </div>

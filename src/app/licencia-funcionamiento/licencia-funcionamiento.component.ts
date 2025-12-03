@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-
-import { environment } from '../../environments/environment';
+import { MuniServicesService } from '../services/muni-services.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-licencia-funcionamiento',
@@ -14,9 +13,14 @@ import { environment } from '../../environments/environment';
 export class LicenciaFuncionamientoComponent implements OnInit {
   form: FormGroup;
   loading: boolean = false;
-  private apiUrl = `${environment.apiUrl}/tramites`;
+  mostrarModal: boolean = false;
+  expedienteGenerado: string = '';
 
-  constructor(private fb: FormBuilder, private http: HttpClient) {
+  constructor(
+    private fb: FormBuilder,
+    private muniService: MuniServicesService,
+    private router: Router
+  ) {
     this.form = this.fb.group({
       usuario: ['', Validators.required],
       nombreNegocio: ['', Validators.required],
@@ -32,12 +36,13 @@ export class LicenciaFuncionamientoComponent implements OnInit {
   onSubmit() {
     if (this.form.valid) {
       this.loading = true;
-      this.http.post(`${this.apiUrl}/licencia`, this.form.value).subscribe({
+      this.muniService.emitirLicenciaFuncionamiento(this.form.value).subscribe({
         next: (response: any) => {
           this.loading = false;
+          this.expedienteGenerado = response.tramite.expediente;
+          this.mostrarModal = true;
           this.form.reset();
           this.form.patchValue({ zonificacion: 'COMERCIAL' });
-          alert('Trámite de Licencia de Funcionamiento creado exitosamente. ID: ' + response.tramite.id);
         },
         error: (err) => {
           this.loading = false;
@@ -45,5 +50,10 @@ export class LicenciaFuncionamientoComponent implements OnInit {
         }
       });
     }
+  }
+
+  cerrarModal() {
+    this.mostrarModal = false;
+    this.router.navigate(['/estado-tramites']);
   }
 }

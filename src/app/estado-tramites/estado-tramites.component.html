@@ -1,0 +1,267 @@
+<div class="container mx-auto px-4 py-8 max-w-7xl">
+  <!-- Header -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-municipal-red mb-2">Estado de Trámites</h1>
+    <p class="text-slate-600">
+      Consulta el estado de tu expediente municipal ingresando el número de expediente o tu DNI.
+    </p>
+  </div>
+
+  <!-- Main Grid: Search on left, Results on right -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    
+    <!-- Left Column: Search Card -->
+    <div class="lg:col-span-1">
+      <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-6 sticky top-24">
+        <h2 class="text-lg font-bold text-slate-800 mb-4">Buscar Trámite</h2>
+
+        <!-- Tabs -->
+        <div class="flex gap-2 mb-6 border-b border-slate-200">
+          <button
+            (click)="cambiarTab('expediente')"
+            [class.active]="activeTab === 'expediente'"
+            class="tab-button px-4 py-2 font-medium text-sm transition-all"
+          >
+            Expediente
+          </button>
+          <button
+            (click)="cambiarTab('dni')"
+            [class.active]="activeTab === 'dni'"
+            class="tab-button px-4 py-2 font-medium text-sm transition-all"
+          >
+            DNI
+          </button>
+        </div>
+
+        <!-- Search Form -->
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-2">
+              {{ activeTab === 'expediente' ? 'Número de Expediente' : 'Número de DNI' }}
+            </label>
+            <input
+              type="text"
+              [(ngModel)]="searchValue"
+              [placeholder]="activeTab === 'expediente' ? '2025-001234' : '12345678'"
+              class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-municipal-red focus:border-transparent text-sm"
+              (keyup.enter)="buscarTramite()"
+            />
+          </div>
+
+          <button
+            (click)="buscarTramite()"
+            [disabled]="buscando || !searchValue.trim()"
+            class="w-full bg-municipal-red hover:bg-opacity-90 text-white font-medium py-2.5 px-6 rounded-lg transition-colors disabled:bg-slate-300 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          >
+            <svg *ngIf="!buscando" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <span *ngIf="buscando" class="loading-spinner"></span>
+            {{ buscando ? 'Buscando...' : 'Buscar' }}
+          </button>
+
+          <!-- Examples -->
+          <div class="text-xs text-slate-500 pt-2 border-t border-slate-100">
+            <p class="font-medium mb-1.5">Ejemplos para probar:</p>
+            <div class="space-y-1">
+              <p>Expediente: <span class="text-municipal-red font-medium">2025-001234</span></p>
+              <p>Expediente: <span class="text-municipal-red font-medium">2025-001567</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Results -->
+    <div class="lg:col-span-2">
+      
+      <!-- Error Message -->
+      <div *ngIf="errorBusqueda" class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+        <div class="flex items-center gap-3">
+          <svg class="w-5 h-5 text-red-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <p class="text-red-800 font-medium text-sm">{{ errorBusqueda }}</p>
+        </div>
+      </div>
+
+      <!-- No Results State -->
+      <div *ngIf="!tramiteEncontrado && !buscando && !errorBusqueda" class="bg-white rounded-lg shadow-sm border border-slate-200 p-12 text-center">
+        <svg class="w-16 h-16 text-slate-300 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        <h3 class="text-lg font-bold text-slate-800 mb-2">No hay resultados</h3>
+        <p class="text-slate-600 text-sm">
+          Ingresa un número de expediente o DNI para consultar el estado de tu trámite.
+        </p>
+      </div>
+
+      <!-- Tramite Details -->
+      <div *ngIf="tramiteEncontrado" class="space-y-6">
+        
+        <!-- Main Info Card -->
+        <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
+          <div class="flex items-start justify-between mb-6">
+            <div>
+              <span class="badge badge-status">
+                {{ getEstadoLabel() }}
+              </span>
+              <h2 class="text-xl font-bold text-slate-800 mt-3">{{ tramiteEncontrado.tipo }}</h2>
+            </div>
+            <button 
+              (click)="descargarPDF()"
+              class="download-button flex items-center gap-2 text-sm font-medium"
+            >
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              Descargar
+            </button>
+          </div>
+
+          <div class="space-y-3 mb-6">
+            <div class="flex items-start">
+              <span class="text-sm text-slate-600 w-32 flex-shrink-0">Expediente:</span>
+              <span class="font-bold text-slate-800 text-sm">{{ tramiteEncontrado.expediente }}</span>
+            </div>
+            <div class="flex items-start">
+              <span class="text-sm text-slate-600 w-32 flex-shrink-0">Solicitante:</span>
+              <span class="font-bold text-slate-800 text-sm">{{ tramiteEncontrado.usuario }}</span>
+            </div>
+            <div class="flex items-start">
+              <span class="text-sm text-slate-600 w-32 flex-shrink-0">Fecha de Inicio:</span>
+              <span class="font-bold text-slate-800 text-sm flex items-center gap-1">
+                <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                {{ formatDate(tramiteEncontrado.fecha) }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Progress Bar -->
+          <div class="mb-2">
+            <div class="flex justify-between items-center mb-2">
+              <p class="text-sm font-medium text-slate-700">Progreso del trámite</p>
+              <p class="text-sm font-bold text-municipal-red">{{ getProgressPercentage() }}%</p>
+            </div>
+            <div class="w-full bg-slate-200 rounded-full h-2.5">
+              <div 
+                class="bg-municipal-red h-2.5 rounded-full transition-all duration-500"
+                [style.width.%]="getProgressPercentage()"
+              ></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Timeline -->
+        <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
+          <h3 class="text-lg font-bold text-slate-800 mb-6">Seguimiento del Proceso</h3>
+          
+          <div class="space-y-1">
+            <div *ngFor="let step of getTimeline(); let i = index; let last = last" class="flex gap-4">
+              <!-- Icon -->
+              <div class="flex flex-col items-center">
+                <div 
+                  [class]="'w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 ' + 
+                    (step.status === 'completed' ? 'bg-green-500' : 
+                     step.status === 'current' ? 'bg-blue-500' : 'bg-slate-300')"
+                >
+                  <svg 
+                    *ngIf="step.status === 'completed'" 
+                    class="w-5 h-5 text-white" 
+                    fill="none" 
+                    viewBox="0 0 24 24" 
+                    stroke="currentColor"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <svg 
+                    *ngIf="step.status === 'current'" 
+                    class="w-5 h-5 text-white" 
+                    fill="none" 
+                    viewBox="0 0 24 24" 
+                    stroke="currentColor"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <div 
+                    *ngIf="step.status === 'pending'" 
+                    class="w-2.5 h-2.5 rounded-full bg-white"
+                  ></div>
+                </div>
+                <div 
+                  *ngIf="!last" 
+                  [class]="'w-0.5 h-10 ' + (step.status === 'completed' ? 'bg-green-300' : 'bg-slate-200')"
+                ></div>
+              </div>
+
+              <!-- Content -->
+              <div class="flex-1 pb-6">
+                <p 
+                  [class]="'font-bold text-sm ' + 
+                    (step.status === 'completed' ? 'text-green-700' : 
+                     step.status === 'current' ? 'text-blue-700' : 'text-slate-400')"
+                >
+                  {{ step.name }}
+                </p>
+                <p 
+                  *ngIf="step.date" 
+                  [class]="'text-xs mt-0.5 flex items-center gap-1 ' + 
+                    (step.status === 'completed' ? 'text-green-600' : 
+                     step.status === 'current' ? 'text-blue-600' : 'text-slate-400')"
+                >
+                  <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  {{ step.date }}
+                </p>
+                <p 
+                  *ngIf="step.status === 'pending'" 
+                  class="text-xs text-slate-400 mt-0.5"
+                >
+                  Pendiente
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
+          <h3 class="text-lg font-bold text-slate-800 mb-4">Acciones Disponibles</h3>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <button class="action-button" (click)="descargarPDF()">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              Descargar Constancia
+            </button>
+            
+            <button class="action-button">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+              </svg>
+              Adjuntar Archivo
+            </button>
+            
+            <button class="action-button">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              Ver Documentos
+            </button>
+            
+            <button class="action-button">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+              Reportar Problema
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

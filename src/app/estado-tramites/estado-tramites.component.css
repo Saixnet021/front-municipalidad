@@ -1,0 +1,318 @@
+/* Tabs */
+.tab-button {
+  color: #64748b;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.tab-button:hover {
+  color: #8B1538;
+}
+
+.tab-button.active {
+  color: #8B1538;
+  border-bottom-color: #8B1538;
+  font-weight: 600;
+}
+
+/* Badges */
+.badge {
+  display: inline-block;
+  padding: 0.375rem 0.875rem;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.badge-status {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.badge-blue {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.badge-green {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.badge-purple {
+  background-color: #e9d5ff;
+  color: #6b21a8;
+}
+
+.badge-gray {
+  background-color: #f1f5f9;
+  color: #475569;
+}
+
+/* Download Button */
+.download-button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #8B1538;
+  border-radius: 0.5rem;
+  color: #8B1538;
+  background-color: white;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.download-button:hover {
+  background-color: #8B1538;
+  color: white;
+}
+
+.download-button:hover svg {
+  color: white;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+  display: inline-block;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Action Buttons */
+.action-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  background-color: white;
+  color: #475569;
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.action-button:hover {
+  background-color: #f8fafc;
+  border-color: #8B1538;
+  color: #8B1538;
+}
+
+.action-button:hover svg {
+  color: #8B1538;
+}
+
+/* Sticky sidebar on desktop */
+@media (min-width: 1024px) {
+  .sticky {
+    position: sticky;
+    top: 6rem;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .action-button {
+    justify-content: center;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Tabs */
+.tab-button {
+  color: #64748b;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.tab-button:hover {
+  color: #8B1538;
+}
+
+.tab-button.active {
+  color: #8B1538;
+  border-bottom-color: #8B1538;
+  font-weight: 600;
+}
+
+/* Badges */
+.badge {
+  display: inline-block;
+  padding: 0.375rem 0.875rem;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.badge-status {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.badge-blue {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.badge-green {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.badge-purple {
+  background-color: #e9d5ff;
+  color: #6b21a8;
+}
+
+.badge-gray {
+  background-color: #f1f5f9;
+  color: #475569;
+}
+
+/* Download Button */
+.download-button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #8B1538;
+  border-radius: 0.5rem;
+  color: #8B1538;
+  background-color: white;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.download-button:hover {
+  background-color: #8B1538;
+  color: white;
+}
+
+.download-button:hover svg {
+  color: white;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+  display: inline-block;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Action Buttons */
+.action-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  background-color: white;
+  color: #475569;
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.action-button:hover {
+  background-color: #f8fafc;
+  border-color: #8B1538;
+  color: #8B1538;
+}
+
+.action-button:hover svg {
+  color: #8B1538;
+}
+
+/* Sticky sidebar on desktop */
+@media (min-width: 1024px) {
+  .sticky {
+    position: sticky;
+    top: 6rem;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .action-button {
+    justify-content: center;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Timeline improvements */
+.timeline-icon {
+  transition: all 0.3s ease;
+}
+
+/* Smooth transitions for progress bar */
+.bg-municipal-red {
+  background-color: #8B1538;
+  transition: width 0.5s ease-in-out;
+}
+
+.text-municipal-red {
+  color: #8B1538;
+}
+
+.focus\:ring-municipal-red:focus {
+  --tw-ring-color: #8B1538;
+}

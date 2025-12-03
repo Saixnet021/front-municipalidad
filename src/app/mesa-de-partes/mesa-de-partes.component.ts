@@ -1,8 +1,8 @@
 import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environments/environment';
+import { MuniServicesService } from '../services/muni-services.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-mesa-de-partes',
@@ -12,32 +12,27 @@ import { environment } from '../../environments/environment';
 })
 export class MesaDePartesComponent implements OnInit {
   tramiteForm: FormGroup;
-  tramites: any[] = [];
   selectedFile: File | null = null;
-  private apiUrl = `${environment.apiUrl}/mesa-partes`;
+  enviando: boolean = false;
+  mensajeExito: string = '';
+  expedienteGenerado: string = '';
+  mostrarModal: boolean = false;
 
   constructor(
     private fb: FormBuilder,
-    private http: HttpClient,
+    private muniService: MuniServicesService,
+    private router: Router,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.tramiteForm = this.fb.group({
+      usuario: ['', Validators.required],
       asunto: ['', Validators.required],
       descripcion: ['', Validators.required]
     });
   }
 
   ngOnInit() {
-    if (isPlatformBrowser(this.platformId)) {
-      this.loadTramites();
-    }
-  }
-
-  loadTramites() {
-    this.http.get<any[]>(`${this.apiUrl}/mis-tramites`).subscribe({
-      next: (data) => this.tramites = data,
-      error: (err) => console.error(err)
-    });
+    // Initialization if needed
   }
 
   onFileSelect(event: any) {
@@ -48,22 +43,33 @@ export class MesaDePartesComponent implements OnInit {
 
   onSubmit() {
     if (this.tramiteForm.valid) {
+      this.enviando = true;
       const formData = new FormData();
+      formData.append('usuario', this.tramiteForm.get('usuario')?.value);
       formData.append('asunto', this.tramiteForm.get('asunto')?.value);
       formData.append('descripcion', this.tramiteForm.get('descripcion')?.value);
       if (this.selectedFile) {
         formData.append('archivo', this.selectedFile);
       }
 
-      this.http.post(this.apiUrl, formData).subscribe({
-        next: () => {
+      this.muniService.crearMesaDePartes(formData).subscribe({
+        next: (response) => {
+          this.enviando = false;
+          this.expedienteGenerado = response.tramite.expediente;
+          this.mostrarModal = true;
           this.tramiteForm.reset();
           this.selectedFile = null;
-          this.loadTramites();
-          alert('Trámite enviado con éxito');
         },
-        error: (err) => alert('Error al enviar trámite')
+        error: (err) => {
+          this.enviando = false;
+          alert('Error al enviar trámite: ' + (err.error?.error || 'Error desconocido'));
+        }
       });
     }
+  }
+
+  cerrarModal() {
+    this.mostrarModal = false;
+    this.router.navigate(['/estado-tramites']);
   }
 }
